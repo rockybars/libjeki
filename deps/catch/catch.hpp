@@ -9386,13 +9386,13 @@ int main (int argc, char * const argv[]) {
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
 #define SCENARIO( ... ) TEST_CASE( "Scenario: " __VA_ARGS__ )
 #define SCENARIO_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
-#define DESCRIBE( ... ) TEST_CASE( "Scenario: " __VA_ARGS__ )
-#define DESCRIBE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
+#define DESCRIBE( ... ) TEST_CASE( "Describe: " __VA_ARGS__ )
+#define DESCRIBE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Describe: " __VA_ARGS__ )
 #else
 #define SCENARIO( name, tags ) TEST_CASE( "Scenario: " name, tags )
 #define SCENARIO_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
-#define DESCRIBE( name, tags ) TEST_CASE( "Scenario: " name, tags )
-#define DESCRIBE_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
+#define DESCRIBE( name, tags ) TEST_CASE( "Describe: " name, tags )
+#define DESCRIBE_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Describe: " name, tags )
 #endif
 #define GIVEN( desc )    SECTION( "   Given: " desc, "" )
 #define IT( desc )       SECTION( "      It: " desc, "" )

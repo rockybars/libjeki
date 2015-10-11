@@ -6,11 +6,11 @@
 #define CATCH_CONFIG_MAIN
 #include <catch>
 
-SCENARIO ("Hello") {
+DESCRIBE ("std::vector tests") {
 
-    GIVEN ("Hello") {
+    IT ("Should check std::vector size correctly") {
 
-        std::vector<int> v( 5 );
+        std::vector<int> v(5);
         REQUIRE(v.size() == 5);
     }
 }
