@@ -5,7 +5,7 @@
 #
 macro(include_jeki_modules)
     foreach(name ${ARGN})
-        # message(STATUS "Including module: ${name}")
+        message(STATUS "Including module '${name}'")
 
         # Include the module headers.
         # These may be located in the "src/" root directory,

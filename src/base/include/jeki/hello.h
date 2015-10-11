@@ -6,13 +6,13 @@
 #ifndef JEKI_HELLO_H
 #define JEKI_HELLO_H
 
+#include <string>
+
 namespace jeki {
 
-class Hello
-{
-    Hello();
-    ~Hello();
-};
+namespace hello {
+    std::string version();
+}
 
 }
 

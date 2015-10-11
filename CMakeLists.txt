@@ -20,30 +20,35 @@ project(LibJeki)
 
 add_definitions(-DUNICODE -D_UNICODE)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 include(LibJekiUtilities REQUIRED)
 include(LibJekiIncludes REQUIRED)
+include(LibJekiDependency REQUIRED)
 include(LibJekiModule REQUIRED)
 include(LibJekiVersion REQUIRED)
+include(Package REQUIRED)
 
-# set options
+# Compiler options
+# include(LibJekiCompilerOptions REQUIRED)
+
+# Set options
 set_option(BUILD_MODULES "Build LibJeki modules" ON)
 set_option(BUILD_MODULE_TESTS "Build module test applications" ON)
 
-# internal options
-set(LibJeki_INCLUDE_DIRS           "") # CACHE INTERNAL "Global include dirs" FORCE)
-set(LibJeki_LIBRARY_DIRS           "") # CACHE INTERNAL "Global include library dirs" FORCE)
-set(LibJeki_INCLUDE_LIBRARIES      "") # CACHE INTERNAL "Global include libraries" FORCE)
+# Internal options
+set(LibJeki_INCLUDE_DIRS "") # CACHE INTERNAL "Global include dirs" FORCE)
+set(LibJeki_LIBRARY_DIRS "") # CACHE INTERNAL "Global include library dirs" FORCE)
+set(LibJeki_INCLUDE_LIBRARIES "") # CACHE INTERNAL "Global include libraries" FORCE)
 
-set(LibJeki_BUILD_DEPENDENCIES     "" CACHE INTERNAL "Dependencies to build" FORCE)
-set(LibJeki_BUILD_MODULES          "" CACHE INTERNAL "Modules to build" FORCE)
-set(LibJeki_BUILD_SAMPLES          "" CACHE INTERNAL "Samples to build" FORCE)
-set(LibJeki_BUILD_TESTS            "" CACHE INTERNAL "Tests to build" FORCE)
-set(LibJeki_BUILD_APPLICATIONS     "" CACHE INTERNAL "Applications to build" FORCE)
+set(LibJeki_BUILD_DEPENDENCIES "" CACHE INTERNAL "Dependencies to build" FORCE)
+set(LibJeki_BUILD_MODULES "" CACHE INTERNAL "Modules to build" FORCE)
+set(LibJeki_BUILD_SAMPLES "" CACHE INTERNAL "Samples to build" FORCE)
+set(LibJeki_BUILD_TESTS "" CACHE INTERNAL "Tests to build" FORCE)
+set(LibJeki_BUILD_APPLICATIONS "" CACHE INTERNAL "Applications to build" FORCE)
 
 set(LibJeki_DIR ${CMAKE_SOURCE_DIR})
 set(LibJeki_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
@@ -78,6 +83,16 @@ add_definitions(-DHAVE_CONFIG_H)
 set(LibJeki_CONFIG_FILE_INCLUDE_DIR "${CMAKE_BINARY_DIR}/" CACHE PATH "Where to create the platform-dependant LibJekiConfig.h")
 include_directories("${LibJeki_CONFIG_FILE_INCLUDE_DIR}")
 
+set_option(WITH_LIBUV "Include libuv support" OFF)
+
+list(APPEND LibJeki_INCLUDE_DIRS ${LibSourcey_DEPENDENCIES_BUILD_DIR})
+
+if(WITH_LIBUV)
+    #include_dependency(LibUV REQUIRED)
+    add_subdirectory(deps/libuv)
+    set(HAVE_LIBUV 1)
+endif()
+
 # Variables for LibJekiConfig.h.cmake
 set(PACKAGE "LibJeki")
 set(PACKAGE_BUGREPORT "https://github.com/rockybars/libjeki/issues")
@@ -91,3 +106,17 @@ configure_file(
     "${CMAKE_SOURCE_DIR}/cmake/LibJekiConfig.h.cmake"
     "${LibJeki_CONFIG_FILE_INCLUDE_DIR}/jekiconfig.h")
 
+#if(UNIX)
+#    CONFIGURE_FILE(
+#        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+#        "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+#        IMMEDIATE @ONLY)
+
+#    ADD_CUSTOM_TARGET(uninstall
+#        "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+#endif()
+
+# Warn in the case of in-source build
+if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    message(WARNING "The source directory is the same as binary directory. \"make clean\" may damage the source tree")
+endif()

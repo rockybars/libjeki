@@ -49,9 +49,9 @@ macro(define_jeki_dependency name)
     set(LibJeki_INCLUDE_DIRS ${lib_directories} PARENT_SCOPE)
     set(LibJeki_INCLUDE_LIBRARIES ${LibJeki_INCLUDE_LIBRARIES} ${name} PARENT_SCOPE)
 
-    #message(STATUS "- Linking dependency ${name} with libraries: ${LibJeki_INCLUDE_LIBRARIES}")
-    #message("${name}: Library Dirs: ${LibJeki_LIBRARY_DIRS}")
-    #message("${name}: Include Dirs: ${LibJeki_INCLUDE_DIRS}")
+    message(STATUS "- Linking dependency ${name} with libraries: ${LibJeki_INCLUDE_LIBRARIES}")
+    message("${name}: Library Dirs: ${LibJeki_LIBRARY_DIRS}")
+    message("${name}: Include Dirs: ${LibJeki_INCLUDE_DIRS}")
 
     if (${name}_OUTPUT_NAME)
         set_target_properties(${name} PROPERTIES OUTPUT_NAME ${${name}_OUTPUT_NAME})
