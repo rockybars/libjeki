@@ -54,19 +54,19 @@ endmacro()
 # if they are not already contained within the target list
 # in flattened string form.
 #
-function(append_unique_list target source)    
-    if (NOT ${source}) 
+function(append_unique_list target source)
+    if (NOT ${source})
         return()
     endif()
-    if (NOT ${target})       
+    if (NOT ${target})
         set(${target} ${${source}} PARENT_SCOPE)
     else()
-        join("${${target}}" ":" target_str)  
+        join("${${target}}" ":" target_str)
         join("${${source}}" ":" source_str)
-        if (NOT ${target_str} MATCHES ${source_str}) 
+        if (NOT ${target_str} MATCHES ${source_str})
             set(${target} ${${target}} ${${source}} PARENT_SCOPE)
-        endif() 
-    endif() 
+        endif()
+    endif()
 endfunction()
 
 
@@ -177,7 +177,7 @@ endfunction()
 
 
 # Converts a CMake list to a string containing elements separated by spaces
-function(set_jeki_libname module_name output_var)  
+function(set_jeki_libname module_name output_var)
     set(temp_name)
     if(WIN32)
         # Postfix of DLLs:
@@ -195,17 +195,17 @@ endfunction()
 #
 # Optionally build a LibJeki module.
 # This should be called before include_dependency and
-# define_sourcey_module for each module.
+# define_jeki_module for each module.
 #
 macro(ask_build_jeki_module name)
     if(BUILD_MODULES)
-        set(BUILD_MODULE_${name} ON CACHE BOOL "Build LibJeki module: ${name}")   
-    endif()    
+        set(BUILD_MODULE_${name} ON CACHE BOOL "Build LibJeki module: ${name}")
+    endif()
     if(BUILD_MODULE_${name})
-        #message(STATUS "Building module: ${name}")   
-        set(LibJeki_BUILD_MODULES ${LibJeki_BUILD_MODULES} ${name} CACHE INTERNAL "") 
-    endif()    
-    mark_as_advanced(FORCE BUILD_MODULE_${name})  
+        #message(STATUS "Building module: ${name}")
+        set(LibJeki_BUILD_MODULES ${LibJeki_BUILD_MODULES} ${name} CACHE INTERNAL "")
+    endif()
+    mark_as_advanced(FORCE BUILD_MODULE_${name})
 endmacro()
 
 
@@ -218,13 +218,13 @@ endmacro()
 #
 macro(ask_build_jeki_test name)
     if(BUILD_MODULE_TESTS)
-        set(BUILD_TEST_${name} ON CACHE BOOL "Build LibJeki test: ${name}")   
-    endif()    
+        set(BUILD_TEST_${name} ON CACHE BOOL "Build LibJeki test: ${name}")
+    endif()
     if(BUILD_TEST_${name})
-        #message(STATUS "Building module test: ${name}")  
-        set(LibJeki_BUILD_TESTS ${LibJeki_BUILD_TESTS} ${name} CACHE INTERNAL "")   
-    endif()    
-    mark_as_advanced(FORCE BUILD_TEST_${name})  
+        #message(STATUS "Building module test: ${name}")
+        set(LibJeki_BUILD_TESTS ${LibJeki_BUILD_TESTS} ${name} CACHE INTERNAL "")
+    endif()
+    mark_as_advanced(FORCE BUILD_TEST_${name})
 endmacro()
 
 

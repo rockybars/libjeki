@@ -20,6 +20,8 @@ project(LibJeki)
 
 add_definitions(-DUNICODE -D_UNICODE)
 
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -48,8 +50,14 @@ set(LibJeki_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 set(LibJeki_BUILD_DIR ${CMAKE_BINARY_DIR})
 set(LibJeki_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
 
+set(LibJeki_DEPENDENCIES_SOURCE_DIR "${LibJeki_DIR}/deps")
+set(LibJeki_DEPENDENCIES_BUILD_DIR "${LibJeki_BUID_DIR}/deps")
+set(LibJeki_DEPENDENCIES_INSTALL_DIR "${LibJeki_INSTALL_DIR}/deps")
+
 if (BUILD_MODULE_TESTS)
     enable_testing()
+    # catch framework
+    list(APPEND LibJeki_INCLUDE_DIRS ${LibJeki_DEPENDENCIES_SOURCE_DIR}/catch)
 endif()
 
 if (BUILD_MODULES)
