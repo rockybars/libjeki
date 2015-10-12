@@ -97,10 +97,10 @@ macro(define_libjeki_test name)
     target_link_libraries(${name} ${LibJeki_INCLUDE_LIBRARIES})
     # add_dependencies(${name} ${LibJeki_INCLUDE_LIBRARIES})
 
-    message(STATUS "Defining module test ${name}:")
-    message(STATUS "    Libraries: ${LibJeki_INCLUDE_LIBRARIES}")
-    message(STATUS "    Library Dirs: ${LibJeki_LIBRARY_DIRS}")
-    message(STATUS "    Include Dirs: ${LibJeki_INCLUDE_DIRS}")
+    #message(STATUS "Defining module test ${name}:")
+    #message(STATUS "    Libraries: ${LibJeki_INCLUDE_LIBRARIES}")
+    #message(STATUS "    Library Dirs: ${LibJeki_LIBRARY_DIRS}")
+    #message(STATUS "    Include Dirs: ${LibJeki_INCLUDE_DIRS}")
 
     # Include library and header directories
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -112,7 +112,7 @@ macro(define_libjeki_test name)
     endif()
     set_target_properties(${name} PROPERTIES DEBUG_POSTFIX "d")
 
-    add_test(${name} ${name})
+    add_test(NAME ${name} WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" COMMAND ${name})
 
     message(STATUS "Enable testing ${name}")
 
