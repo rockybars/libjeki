@@ -23,8 +23,6 @@ add_definitions(-DUNICODE -D_UNICODE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-
 include(LibJekiUtilities REQUIRED)
 include(LibJekiIncludes REQUIRED)
 include(LibJekiDependency REQUIRED)
@@ -33,11 +31,15 @@ include(LibJekiVersion REQUIRED)
 include(Package REQUIRED)
 
 # Compiler options
-# include(LibJekiCompilerOptions REQUIRED)
+include(LibJekiCompilerOptions REQUIRED)
 
 # Set options
 set_option(BUILD_MODULES "Build LibJeki modules" ON)
 set_option(BUILD_MODULE_TESTS "Build module test applications" ON)
+
+# MSVC CRT linkage
+set_option(BUILD_WITH_STATIC_CRT "Enables staticaly linked CRT for staticaly linked libraries" ON)
+
 
 # Internal options
 set(LibJeki_INCLUDE_DIRS "") # CACHE INTERNAL "Global include dirs" FORCE)
@@ -115,6 +117,10 @@ configure_file(
 #    ADD_CUSTOM_TARGET(uninstall
 #        "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 #endif()
+
+if(MSVC)
+    include(LibJekiCRTLinkage REQUIRED)
+endif()
 
 # Warn in the case of in-source build
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
