@@ -1,0 +1,6 @@
+create libjeki.a
+addlib ./src/base/libjeki_base.a 
+addlib ./src/net/libjeki_net.a
+addlib ../deps/botan/lib/libbotan-1.11.a
+save
+end
