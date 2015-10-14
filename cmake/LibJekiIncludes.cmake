@@ -1,4 +1,98 @@
 #
+### Macro: jeki_find_library
+#
+# Finds libraries with finer control over search paths
+# for compilers with multiple configuration types.
+#
+macro(jeki_find_library prefix)
+
+  include(CMakeParseArguments REQUIRED)
+  # cmake_parse_arguments(prefix options singleValueArgs multiValueArgs ${ARGN})
+  cmake_parse_arguments(${prefix}
+    ""
+    ""
+    "NAMES;DEBUG_NAMES;RELEASE_NAMES;DEBUG_PATHS;RELEASE_PATHS;PATHS"
+    ${ARGN}
+    )
+
+  if(WIN32 AND MSVC)
+
+    if(NOT ${prefix}_DEBUG_PATHS)
+      list(APPEND ${prefix}_DEBUG_PATHS ${${prefix}_PATHS})
+    endif()
+
+    # Reloading to ensure build always passes and picks up changes
+    # This is more expensive but proves useful for fragmented libraries like WebRTC
+    set(${prefix}_DEBUG_LIBRARY ${prefix}_DEBUG_LIBRARY-NOTFOUND)
+    find_library(${prefix}_DEBUG_LIBRARY
+      NAMES
+        ${${prefix}_DEBUG_NAMES}
+        ${${prefix}_NAMES}
+      PATHS
+        ${${prefix}_DEBUG_PATHS}
+        # ${${prefix}_PATHS}
+      )
+
+    if(NOT ${prefix}_RELEASE_PATHS)
+      list(APPEND ${prefix}_RELEASE_PATHS ${${prefix}_PATHS})
+    endif()
+
+    set(${prefix}_RELEASE_LIBRARY ${prefix}_RELEASE_LIBRARY-NOTFOUND)
+    find_library(${prefix}_RELEASE_LIBRARY
+      NAMES
+        ${${prefix}_RELEASE_NAMES}
+        ${${prefix}_NAMES}
+      PATHS
+        ${${prefix}_RELEASE_PATHS}
+        # ${${prefix}_PATHS}
+      )
+
+    if(${prefix}_DEBUG_LIBRARY OR ${prefix}_RELEASE_LIBRARY)
+      if(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
+        #if (${prefix}_RELEASE_LIBRARY)
+          list(APPEND ${prefix}_LIBRARY "optimized" ${${prefix}_RELEASE_LIBRARY})
+        #endif()
+        #if (${prefix}_DEBUG_LIBRARY)
+          list(APPEND ${prefix}_LIBRARY "debug" ${${prefix}_DEBUG_LIBRARY})
+        #endif()
+      else()
+        if (${prefix}_RELEASE_LIBRARY)
+          list(APPEND ${prefix}_LIBRARY ${${prefix}_RELEASE_LIBRARY})
+        elseif (${prefix}_DEBUG_LIBRARY)
+          list(APPEND ${prefix}_LIBRARY ${${prefix}_DEBUG_LIBRARY})
+        endif()
+      endif()
+      #mark_as_advanced(${prefix}_DEBUG_LIBRARY ${prefix}_RELEASE_LIBRARY)
+    endif()
+
+  else()
+
+    find_library(${prefix}_LIBRARY
+      NAMES
+        # ${${prefix}_RELEASE_NAMES}
+        # ${${prefix}_DEBUG_NAMES}
+        ${${prefix}_NAMES}
+      PATHS
+        # ${${prefix}_RELEASE_PATHS}
+        # ${${prefix}_DEBUG_PATHS}
+        ${${prefix}_PATHS}
+      )
+
+  endif()
+
+  #message("*** Sourcey find library for ${prefix}")
+  #message("Debug Library: ${${prefix}_DEBUG_LIBRARY}")
+  #message("Release Library: ${${prefix}_RELEASE_LIBRARY}")
+  #message("Library: ${${prefix}_LIBRARY}")
+  #message("Debug Paths: ${${prefix}_RELEASE_PATHS}")
+  #message("Release Paths: ${${prefix}_DEBUG_PATHS}")
+  #message("Paths: ${${prefix}_PATHS}")
+  #message("Debug Names: ${${prefix}_RELEASE_NAMES}")
+  #message("Release Names: ${${prefix}_DEBUG_NAMES}")
+  #message("Names: ${${prefix}_NAMES}")
+
+endmacro()
+#
 ### Macro: include_jeki_modules
 #
 # Includes dependent LibJeki module(s) into a project.

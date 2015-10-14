@@ -1,11 +1,13 @@
 #include "jeki/hello.h"
+#include <botan/botan.h>
 
 namespace jeki {
 
 namespace hello {
 
     std::string version() {
-        return "1.0";
+
+        return Botan::version_string();
     }
 }
 

@@ -10,6 +10,10 @@ macro(define_jeki_module name)
     source_group("Src" FILES ${lib_srcs})
     source_group("Include" FILES ${lib_hdrs})
 
+    include_directories(${LibJeki_INCLUDE_DIRS})
+
+    message(STATUS ${LibJeki_INCLUDE_DIRS})
+
     add_library(${name} ${lib_srcs} ${lib_hdrs})
 
     # Set HAVE_JEKI_XXX at parent scope for inclusion
@@ -83,24 +87,21 @@ macro(define_libjeki_test name)
     add_executable(${name} ${lib_srcs} ${lib_hdrs})
 
     # Include dependent modules
-    foreach(module ${ARGV})
-        if (NOT ${module} MATCHES ${name})
-            include_jeki_modules(${module})
-            add_dependencies(${name} ${module})
-            # include external libs
-            set(LibJeki_INCLUDE_LIBRARIES "${LibJeki_INCLUDE_LIBRARIES} ${module}")
-            string(STRIP "${LibJeki_INCLUDE_LIBRARIES}" LibJeki_INCLUDE_LIBRARIES)
-        endif()
+    foreach(module ${ARGN})
+        include_jeki_modules(${module})
+        add_dependencies(${name} ${module})
+        target_link_libraries(${name} ${module})
     endforeach()
 
     # Include external dependencies
+
     target_link_libraries(${name} ${LibJeki_INCLUDE_LIBRARIES})
     # add_dependencies(${name} ${LibJeki_INCLUDE_LIBRARIES})
 
-    #message(STATUS "Defining module test ${name}:")
-    #message(STATUS "    Libraries: ${LibJeki_INCLUDE_LIBRARIES}")
-    #message(STATUS "    Library Dirs: ${LibJeki_LIBRARY_DIRS}")
-    #message(STATUS "    Include Dirs: ${LibJeki_INCLUDE_DIRS}")
+    # message(STATUS "Defining module test ${name}:")
+    # message(STATUS "    Libraries: ${LibJeki_INCLUDE_LIBRARIES}")
+    # message(STATUS "    Library Dirs: ${LibJeki_LIBRARY_DIRS}")
+    # message(STATUS "    Include Dirs: ${LibJeki_INCLUDE_DIRS}")
 
     # Include library and header directories
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")

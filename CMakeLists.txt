@@ -61,6 +61,23 @@ set(LibJeki_DEPENDENCIES_SOURCE_DIR "${LibJeki_DIR}/deps")
 set(LibJeki_DEPENDENCIES_BUILD_DIR "${LibJeki_BUID_DIR}/deps")
 set(LibJeki_DEPENDENCIES_INSTALL_DIR "${LibJeki_INSTALL_DIR}/deps")
 
+# default
+set_option(WITH_LIBUV "Include libuv support" OFF)
+set_option(WITH_BOTAN "Include botan support" ON)
+
+if(WITH_LIBUV)
+    #include_dependency(LibUV REQUIRED)
+    set(HAVE_LIBUV 1)
+endif()
+
+if(WITH_BOTAN)
+    # FIXME: create a sensible macro to automatically handle this
+    list(APPEND LibJeki_INCLUDE_DIRS ${LibJeki_DEPENDENCIES_SOURCE_DIR}/botan/include/botan-1.11)
+    set(LibJeki_INCLUDE_LIBRARIES  ${LibJeki_DEPENDENCIES_SOURCE_DIR}/botan/lib/libbotan-1.11.a)
+    # FIXME: if (MSVC)
+    set(HAVE_BOTAN 1)
+endif()
+
 if (BUILD_MODULE_TESTS)
     enable_testing()
     # catch framework
@@ -84,16 +101,6 @@ add_definitions(-DHAVE_CONFIG_H)
 # Set the platform dependant LibJekiConfig.h
 set(LibJeki_CONFIG_FILE_INCLUDE_DIR "${CMAKE_BINARY_DIR}/" CACHE PATH "Where to create the platform-dependant LibJekiConfig.h")
 include_directories("${LibJeki_CONFIG_FILE_INCLUDE_DIR}")
-
-set_option(WITH_LIBUV "Include libuv support" OFF)
-
-list(APPEND LibJeki_INCLUDE_DIRS ${LibSourcey_DEPENDENCIES_BUILD_DIR})
-
-if(WITH_LIBUV)
-    #include_dependency(LibUV REQUIRED)
-    add_subdirectory(deps/libuv)
-    set(HAVE_LIBUV 1)
-endif()
 
 # Variables for LibJekiConfig.h.cmake
 set(PACKAGE "LibJeki")

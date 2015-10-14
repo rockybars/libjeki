@@ -227,4 +227,11 @@ macro(ask_build_jeki_test name)
     mark_as_advanced(FORCE BUILD_TEST_${name})
 endmacro()
 
+#
+### Macro: git_clone_dependency
+#
+macro(git_clone_dependency name)
+
+
+endmacro()
 
